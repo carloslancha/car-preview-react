@@ -1,0 +1,78 @@
+.car-container {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+
+.car-container img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.car-title {
+	color: white;
+	left: 50px;
+	position: absolute;
+	top: 50px;
+}
+
+.car-title h1 {
+	font-size: 80px;
+	text-shadow: 1px 1px 8px #666666;
+}
+
+.car-title p {
+	font-size: 25px;
+	text-shadow: 1px 1px 8px #666666;
+}
+
+.car-parts-info {
+	background: #000000b3;
+	bottom: 0;
+	color: white;
+	padding: 20px 50px;
+	position: absolute;
+	width: 100%;
+	opacity: 0;
+}
+
+.car-parts-info.out {
+	animation: fadeout 0.5s;
+	opacity: 0;
+}
+
+.car-parts-info.in {
+	animation: fadein 0.5s;
+	opacity: 1;
+}
+
+.car-parts-info h2 {
+	margin-top: 0;
+}
+
+.car-parts-info-help {
+	top: 0;
+	padding: 10px;
+	position: absolute;
+	color: white;
+	right: 0;
+	text-shadow: 1px 1px 8px #666666;
+}
+
+@keyframes fadein {
+	from {
+		opacity:0;
+	}
+	to {
+		opacity:1;
+	}
+}
+
+@keyframes fadeout {
+	from {
+		opacity:1;
+	}
+	to {
+		opacity:0;
+	}
+}
