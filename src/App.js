@@ -1,40 +1,98 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CarPreview from './components/CarPreview';
-import carPicture from './images/van2.jpg';
+import { useQuery } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
+import { DOMAIN } from './constants';
 
 function App() {
-	return (
-		<CarPreview
-			carName='Car Name'
-			carDescription='Awesome car caption'
-			carPicture={carPicture}
-			carParts={[
-				{
-					description: 'Amazing detail about piece 1',
-					name: 'Piece #1',
-					x: '18%',
-					y: '48%'
-				},
-				{
-					description: 'Amazing detail about piece 2',
-					name: 'Piece #2',
-					x: '33.4%',
-					y: '68%'
-				},
-				{
-					description: 'Amazing detail about piece 3',
-					name: 'Piece #3',
-					x: '60%',
-					y: '23%'
-				},
-				{
-					description: 'Amazing detail about piece 4',
-					name: 'Piece #4',
-					x: '79.4%',
-					y: '48%'
+	const [car, setCar] = useState();
+
+	const processContent = (data) => {
+		const structuredContentByKey = data.structuredContentByKey;
+
+		const car = {
+			name: structuredContentByKey.title,
+			parts: []
+		};
+
+		structuredContentByKey.contentFields.forEach(field => {
+			car[field.label.toLowerCase()] = field.value.data || 
+				(field.value.image && 
+					`${DOMAIN}${field.value.image.contentUrl}`
+				)
+		});
+
+		structuredContentByKey.relatedContents.forEach(structuredCarPart => {
+			const carPart = {
+				name: structuredCarPart.title
+			};
+
+			structuredCarPart.graphQLNode.contentFields.forEach(carPartField => {
+				carPart[carPartField.label.toLowerCase()] = carPartField.value.data;
+			});
+
+			car.parts.push(carPart);
+		})
+
+		setCar(car);
+	};
+
+	useQuery(
+		gql`
+			query getCar($siteId: Long!, $contentKey: String!) {
+				structuredContentByKey(key: $contentKey, siteId: $siteId) {
+					title
+					relatedContents {
+						contentType
+						id
+						title
+						graphQLNode {
+							id
+							... on StructuredContent {
+								title
+								contentFields {
+									label
+									value {
+										data
+									}
+								}
+							}
+						}
+					}
+					contentStructureId
+					contentFields {
+						label
+						value {
+							data
+							image {
+								contentUrl
+								encodingFormat
+							}
+						}
+					}
 				}
-			]}
-		/>
+			}
+		`,
+		{
+			onCompleted: data => { processContent(data)},
+			variables: { 
+				contentKey: '58770',
+				siteId: 49829,
+			},
+		}
+	);
+
+	return (
+		<React.Fragment>
+			{car && (
+				<CarPreview
+					carName={car.name}
+					carDescription={car.description}
+					carPicture={car.image}
+					carParts={car.parts}
+				/>
+			)}		
+		</React.Fragment>
 	);
 }
 
