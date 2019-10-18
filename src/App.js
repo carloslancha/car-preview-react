@@ -5,7 +5,11 @@ import { gql } from 'apollo-boost';
 import CarPreview from './components/CarPreview';
 import { DOMAIN } from './constants';
 
-function App() {
+function App({
+	configuration
+}) {
+	const {contentKey, siteId = 49829 } = configuration.portletInstance;
+
 	const [car, setCar] = useState();
 
 	const processContent = (data) => {
@@ -23,12 +27,12 @@ function App() {
 				)
 		});
 
-		structuredContentByKey.relatedContents.map(structuredCarPart => {
+		structuredContentByKey.relatedContents.forEach(structuredCarPart => {
 			const carPart = {
 				name: structuredCarPart.title
 			};
 
-			structuredCarPart.graphQLNode.contentFields.map(carPartField => {
+			structuredCarPart.graphQLNode.contentFields.forEach(carPartField => {
 				carPart[carPartField.label.toLowerCase()] = carPartField.value.data;
 			});
 
@@ -38,7 +42,7 @@ function App() {
 		setCar(car);
 	};
 
-	useQuery(
+	const {loading} = contentKey && siteId && useQuery(
 		gql`
 			query getCar($siteId: Long!, $contentKey: String!) {
 				structuredContentByKey(key: $contentKey, siteId: $siteId) {
@@ -77,8 +81,8 @@ function App() {
 		{
 			onCompleted: data => { processContent(data)},
 			variables: { 
-				contentKey: '56697',
-				siteId: 49829,
+				contentKey: contentKey,
+				siteId: siteId
 			},
 		}
 	);
@@ -91,8 +95,21 @@ function App() {
 					carDescription={car.description}
 					carPicture={car.image}
 					carParts={car.parts}
+					pointsColor={configuration.system.pointsColor}
 				/>
-			)}		
+			)}
+
+			{!car && (!contentKey || !siteId) && (
+				<div className="text-center">
+					{Liferay.Language.get('please-configure-the-widget')}
+				</div>
+			)}
+
+			{!loading && !car && contentKey && siteId && (
+				<div className="text-center">
+					{Liferay.Language.get('the-selected-content-key-does-not-exist')}
+				</div>
+			)}
 		</React.Fragment>
 	);
 }

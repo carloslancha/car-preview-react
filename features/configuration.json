@@ -1,13 +1,22 @@
 { 
 	"$schema": "https://raw.githubusercontent.com/liferay/liferay-js-toolkit/master/resources/schemas/configuration.schema.json",
 	"system": {
-		"category": "car-preview", 
 		"name": "car-preview",
 		"fields": { 
+			"pointsColor": {
+				"type": "string",
+				"name": "points-color",
+				"default": "#4949ff"
+			}
 		} 
 	},
 	"portletInstance": {
+		"name": "Car Configuration",
 		"fields": { 
+			"contentKey": {
+				"type": "string",
+				"name": "structured-car-content-key-web-content"
+			}
 		} 
 	}
 }
