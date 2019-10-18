@@ -1,0 +1,13 @@
+{
+	"translatorTextKey": "",
+	"supportedLocales": [],
+	"liferayDir": "/Users/carloslancha/Proyectos/liferay/talk-symposium-2019/7.2 SP1 Riuvo",
+	"webpack": {
+		"rules": [
+			{
+				"test": "src\\/.*\\.js$",
+				"use": "babel-loader"
+			}
+		]
+	}
+}
