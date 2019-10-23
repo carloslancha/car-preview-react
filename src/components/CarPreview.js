@@ -61,7 +61,7 @@ function CarPreview({
                 </div>
 
                 <div className="car-parts-info-help">
-					Move the mouse pointer over the dots to discover more
+					{Liferay.Language.get('move-the-mouse-pointer-over-the-dots-to-discover-more')}
                 </div>
             </div>
         </div>

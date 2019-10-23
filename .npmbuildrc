@@ -1,6 +1,6 @@
 {
-	"translatorTextKey": "",
-	"supportedLocales": [],
+	"translatorTextKey": "your-translator-key",
+	"supportedLocales": ["es","en","fr","it"],
 	"liferayDir": "/Users/carloslancha/Proyectos/liferay/talk-symposium-2019/7.2 SP1 Riuvo",
 	"webpack": {
 		"rules": [
